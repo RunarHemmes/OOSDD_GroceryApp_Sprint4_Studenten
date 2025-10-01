@@ -51,17 +51,14 @@ namespace Grocery.Core.Services
 
         public List<BestSellingProducts> GetBestSellingProducts(int topX = 5)
         {
-            //List<Product> products = _productRepository.GetAll();
             List<BestSellingProducts> rankedProducts = new List<BestSellingProducts>();
-            //List<GroceryListItem> groceryItems = _groceriesRepository.GetAll().Where(p => p.ProductId == product.Id).ToList();
 
             foreach (GroceryListItem item in _groceriesRepository.GetAll())
             {
                 if (rankedProducts.Find(p => p.Id == item.ProductId) == null)
                 {
                     Product product = _productRepository.GetAll().FirstOrDefault(p => p.Id == item.ProductId);
-                    rankedProducts.Add(new BestSellingProducts(
-                        item.ProductId, product.Name, product.Stock, 0, 0));
+                    rankedProducts.Add(new BestSellingProducts(item.ProductId, product.Name, product.Stock, 0, 0));
                 }
                 rankedProducts.Find(p => p.Id == item.ProductId).NrOfSells += item.Amount;
             }
@@ -73,7 +70,7 @@ namespace Grocery.Core.Services
             NrsOfSells.Sort();
             NrsOfSells.Reverse();
 
-            for (int i = 0; i < NrsOfSells.Count && i < 5; i++)
+            for (int i = 0; i < NrsOfSells.Count && i < topX; i++)
             {
                 rankedProducts.FirstOrDefault(p => p.nrOfSells == NrsOfSells[i]).Ranking = i +1;
             }
@@ -85,7 +82,17 @@ namespace Grocery.Core.Services
                     rankedProducts.RemoveAt(i -1); 
                 }
             }
-            return rankedProducts;
+            return SortRankedProducts(rankedProducts);
+        }
+
+        public List<BestSellingProducts> SortRankedProducts(List<BestSellingProducts> rankedProducts)
+        {
+            List<BestSellingProducts> sortedProducts = new List<BestSellingProducts>();
+            for (int i = 0; i < 5; i++)
+            {
+                sortedProducts.Add(rankedProducts.Find(p => p.Ranking == i));
+            }
+            return sortedProducts;
         }
 
         private void FillService(List<GroceryListItem> groceryListItems)
