@@ -51,7 +51,41 @@ namespace Grocery.Core.Services
 
         public List<BestSellingProducts> GetBestSellingProducts(int topX = 5)
         {
-            throw new NotImplementedException();
+            //List<Product> products = _productRepository.GetAll();
+            List<BestSellingProducts> rankedProducts = new List<BestSellingProducts>();
+            //List<GroceryListItem> groceryItems = _groceriesRepository.GetAll().Where(p => p.ProductId == product.Id).ToList();
+
+            foreach (GroceryListItem item in _groceriesRepository.GetAll())
+            {
+                if (rankedProducts.Find(p => p.Id == item.ProductId) == null)
+                {
+                    Product product = _productRepository.GetAll().FirstOrDefault(p => p.Id == item.ProductId);
+                    rankedProducts.Add(new BestSellingProducts(
+                        item.ProductId, product.Name, product.Stock, 0, 0));
+                }
+                rankedProducts.Find(p => p.Id == item.ProductId).NrOfSells += item.Amount;
+            }
+            List<int> NrsOfSells = new List<int>();
+            foreach (BestSellingProducts product in rankedProducts)
+            {
+                NrsOfSells.Add(product.NrOfSells);
+            }
+            NrsOfSells.Sort();
+            NrsOfSells.Reverse();
+
+            for (int i = 0; i < NrsOfSells.Count && i < 5; i++)
+            {
+                rankedProducts.FirstOrDefault(p => p.nrOfSells == NrsOfSells[i]).Ranking = i +1;
+            }
+
+            for (int i = rankedProducts.Count; i > 0; i--)
+            {
+                if (rankedProducts[i -1].Ranking == 0) 
+                { 
+                    rankedProducts.RemoveAt(i -1); 
+                }
+            }
+            return rankedProducts;
         }
 
         private void FillService(List<GroceryListItem> groceryListItems)
