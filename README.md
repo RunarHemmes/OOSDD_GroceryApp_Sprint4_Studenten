@@ -1,3 +1,21 @@
+# Branching strategie
+### main:
+Hier komt de uiteindelijke code te staan.
+Het is niet de bedoeling dat hier directe commits features of fixes naar gedaan worden.
+
+### develop:
+Hier worden alle features eerst verzameld en samen getest, dan pas kan er met main gemergd worden.
+
+### feature:
+Op de feature branches worden de features ontwikkeld en getest, daarna kan er gemergd worden met develop.
+De naam van een features branch is altijd als volgt: feature/naam_van_feature
+
+### hotfix:
+Op de hotfix branches worden hotfixes gemaakt voor de main en/of develop branch. Deze kunnen na het testen met main en/of develop gemergd worden.
+
+
+
+
 # GroceryApp sprint4 Studentversie  
 
 ## UC10 Productaantal in boodschappenlijst
