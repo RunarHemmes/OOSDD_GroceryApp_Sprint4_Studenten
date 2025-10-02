@@ -21,7 +21,10 @@ namespace Grocery.App.ViewModels
             Products.Clear();
             foreach (BestSellingProducts item in _groceryListItemsService.GetBestSellingProducts())
             {
-                Products.Add(item);
+                if (item != null)
+                {
+                    Products.Add(item);
+                }
             }
         }
 
