@@ -1,0 +1,36 @@
+name: MAUI Unit Tests
+ 
+on:
+  release:
+  push:
+    branches:
+      - main
+      - infra/runner-toevoegen
+  pull_request:
+    branches:
+      - main
+      - develop
+ 
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - name: Haal de repository op
+        uses: actions/checkout@v4
+ 
+      - name: Installeer .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'  # Gebruik de juiste versie voor MAUI
+ 
+      - name: Installeer MAUI workloads
+        run: dotnet workload install maui
+ 
+      - name: Herstel afhankelijkheden
+        run: dotnet restore
+ 
+      - name: Bouw de applicatie
+        run: dotnet build --configuration Release -f net8.0-windows10.0.19041.0 Grocery.App/Grocery.App.csproj /p:RuntimeIdentifierOverride=win-x64
+ 
+      - name: Voer unit tests uit
+        run: dotnet test --configuration Release --no-restore --verbosity normal TestCore\TestCore.csproj
