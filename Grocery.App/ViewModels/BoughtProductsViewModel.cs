@@ -31,6 +31,7 @@ namespace Grocery.App.ViewModels
 
         partial void OnSelectedProductChanged(Product? oldValue, Product newValue)
         {
+            BoughtProductsList.Clear();
             foreach (BoughtProducts p in _boughtProductsService.Get(newValue.Id).ToObservableCollection())
             {
                 BoughtProductsList.Add(p);
