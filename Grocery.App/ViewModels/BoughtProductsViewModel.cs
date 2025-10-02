@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
@@ -15,16 +16,25 @@ namespace Grocery.App.ViewModels
         Product selectedProduct;
         public ObservableCollection<BoughtProducts> BoughtProductsList { get; set; } = [];
         public ObservableCollection<Product> Products { get; set; }
+        public ObservableCollection<string> ProductNames { get; set; }
 
         public BoughtProductsViewModel(IBoughtProductsService boughtProductsService, IProductService productService)
         {
             _boughtProductsService = boughtProductsService;
             Products = new(productService.GetAll());
+            ProductNames = new ObservableCollection<string>();
+            foreach (Product p in Products)
+            {
+                ProductNames.Add(p.Name);
+            }
         }
 
         partial void OnSelectedProductChanged(Product? oldValue, Product newValue)
         {
-            //Zorg dat de lijst BoughtProductsList met de gegevens die passen bij het geselecteerde product. 
+            foreach (BoughtProducts p in _boughtProductsService.Get(newValue.Id).ToObservableCollection())
+            {
+                BoughtProductsList.Add(p);
+            }
         }
 
         [RelayCommand]

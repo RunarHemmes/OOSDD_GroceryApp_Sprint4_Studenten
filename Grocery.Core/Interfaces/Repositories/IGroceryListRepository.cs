@@ -5,6 +5,9 @@ namespace Grocery.Core.Interfaces.Repositories
     public interface IGroceryListRepository
     {
         public List<GroceryList> GetAll();
+
+        public List<GroceryList> GetAllFromClient(int clientId);
+
         public GroceryList Add(GroceryList item);
 
         public GroceryList? Delete(GroceryList item);
