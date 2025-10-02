@@ -44,7 +44,7 @@ namespace TestCore
             {
                 Assert.IsFalse(PasswordHelper.VerifyPassword(password, passwordHash));
             }
-            catch 
+            catch
             {
                 Assert.IsFalse(false);
             }
