@@ -19,6 +19,20 @@ namespace Grocery.Core.Data.Repositories
         {
             return groceryLists;
         }
+
+        public List<GroceryList> GetAllFromClient(int clientId)
+        {
+            List<GroceryList> Lists = new List<GroceryList>();
+            foreach (GroceryList g in  groceryLists)
+            {
+                if (g.ClientId == clientId)
+                {
+                    Lists.Add(g);
+                }
+            }
+            return Lists;
+        }
+
         public GroceryList Add(GroceryList item)
         {
             throw new NotImplementedException();
